@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">点击我试一下</div>
+    <script src="R.js"></script>
+    <script>
+        // 要使用event的on功能和dom的html功能，而不是要定义模块，所以第一个参数为空
+        R.module(["lib/event", "lib/dom"], function(events, dom) {
+            events.on("app", "click", function() {
+                dom.html("app", "success")
+            })
+        })
+
+        // 要使用dom的html功能
+        // R.module(["lib/dom"], function(dom) {
+        //     dom.html("app", "success")
+        // })
+    </script>
+</body>
+</html>
