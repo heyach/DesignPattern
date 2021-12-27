@@ -86,7 +86,7 @@ R.module = function (...args) {
     if(len = deps.length) {
         for(let i = 0;i < len;i++) {
             depsCount++
-            // 依次加载模块，设置回调，当deps加载完之后，执行模块定义的回调
+            // 依次加载模块，设置回调，当dep加载完之后，执行模块定义的回调，这样才可以完成deps的计数，如果url有值，那么最后还需要完成url模块的定义
             loadModule(deps[i], function(mod) {
                 params[i] = mod
                 depsCount--
