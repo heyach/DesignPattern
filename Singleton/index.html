@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="S.js"></script>
+    <script>
+        var d = new mydom2()
+        d.html("app", "hello")
+        console.log(d)
+        d.html("app", "world")
+        var d2 = new mydom2()
+        console.log(d2)
+        console.log(d === d2)
+    </script>
+</body>
+</html>
