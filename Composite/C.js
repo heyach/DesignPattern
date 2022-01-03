@@ -1,3 +1,4 @@
+// 寄生式继承
 function inheritPrototype(sub, sup) {
     function inheritObject(o) {
         function F() {}
@@ -8,31 +9,56 @@ function inheritPrototype(sub, sup) {
     p.constructor = sub
     sub.prototype = p
 }
-var News = function() {
+
+function Sup(name) {
+    this.name = name
+    this.colors = "red"
+}
+Sup.prototype.getName = function() {
+    console.lgog(this.name)
+}
+function Sub(name, time) {
+    Sup.call(this, name)
+    this.time = time
+}
+inheritPrototype(Sub, Sup)
+Sub.prototype.getTime = function() {
+    console.log(this.time)
+}
+var s1 = new Sub("s1", "2014")
+var s2 = new Sub("s2", "2015")
+console.log(s1 instanceof Sub)
+console.log(s1 instanceof Sup)
+
+// 表单组合虚拟类
+function FormComposite() {
+    // 所有子类都有的特权变量
     this.children = []
     this.element = null
 }
-News.prototype = {
+FormComposite.prototype = {
     init: function() {},
     add: function() {},
     getElement: function() {},
 }
-function Container(id, parent) {
-    News.call(this)
+function FormContainer(id, parent, className) {
+    FormComposite.call(this)
     this.id = id
     this.parent = parent
+    this.className = className
     this.init()
 }
-inheritPrototype(Container, News)
-Container.prototype = {
+inheritPrototype(FormContainer, FormComposite)
+FormContainer.prototype = {
     init: function() {
         this.element = document.createElement("ul")
         this.element.id = this.id
-        this.element.className = "new-container"
+        this.element.className = this.className
     },
     add: function(child) {
         this.children.push(child)
         this.element.appendChild(child.getElement())
+        // 链式调用的关键
         return this
     },
     getElement: function() {
@@ -43,12 +69,17 @@ Container.prototype = {
     }
 }
 
-function Item(className) {
-    News.call(this)
+function FormItem(className) {
+    FormComposite.call(this)
     this.className = className
+    this.init()
 }
-inheritPrototype(Item, News)
-Item.prototype = {
+inheritPrototype(FormItem, FormComposite)
+FormItem.prototype = {
+    init: function() {
+        this.element = document.createElement("li")
+        this.element.className = this.className
+    },
     add: function(child) {
         this.children.push(child)
         this.element.appendChild(child.getElement())
@@ -59,43 +90,16 @@ Item.prototype = {
     },
 }
 
-function NewsGroup(className) {
-    News.call(NewsGroup)
+function InputItem(className) {
+    FormComposite.call(this)
     this.className = className
     this.init()
 }
-inheritPrototype(NewsGroup, News)
-NewsGroup.prototype = {
+inheritPrototype(InputItem, FormComposite)
+InputItem.prototype = {
     init: function() {
-        this.element = document.createElement("div")
+        this.element = document.createElement("input")
         this.element.className = this.className
-    },
-    add: function(child) {
-        this.children.push(children)
-        this.element.appendChild(child.getElement())
-        return this
-    },
-    getElement: function() {
-        return this.element
-    }
-}
-
-function ImageNews(url, href, className) {
-    News.call(this)
-    this.url = url
-    this.href = href
-    this.className = className
-    this.init()
-}
-inheritPrototype(ImageNews, News)
-ImageNews.prototype = {
-    init: function() {
-        this.element = document.createElement("a")
-        var img = new Image()
-        img.src = this.url
-        this.element.appendChild(img)
-        this.element.className = "img-news"
-        this.element.href = this.href
     },
     add: function() {
 
@@ -104,24 +108,62 @@ ImageNews.prototype = {
         return this.element
     }
 }
-var news1 = new Container("news", document.body)
-news1.add(new Item("normol").add(new ImageNews("https://file.iviewui.com/dist/7dcf5af41fac2e4728549fa7e73d61c5.svg", "#", "small"))).show()
-// function Sup(name) {
-//     this.name = name
-//     this.colors = "red"
-// }
-// Sup.prototype.getName = function() {
-//     console.lgog(this.name)
-// }
-// function Sub(name, time) {
-//     Sup.call(this, name)
-//     this.time = time
-// }
-// inheritPrototype(Sub, Sup)
-// Sub.prototype.getTime = function() {
-//     console.log(this.time)
-// }
-// var s1 = new Sub("s1", "2014")
-// var s2 = new Sub("s2", "2015")
-// s1 instanceof Sub
-// s1 instanceof Sup
+
+function LabelItem(text, className) {
+    FormComposite.call(this)
+    this.text = text
+    this.className = className
+    this.init()
+}
+inheritPrototype(LabelItem, FormComposite)
+LabelItem.prototype = {
+    init: function() {
+        this.element = document.createElement("label")
+        this.element.innerHTML = this.text
+        this.element.className = this.className
+    },
+    add: function() {},
+    getElement: function() {
+        return this.element
+    }
+}
+
+function SpanItem(text, className) {
+    FormComposite.call(this)
+    this.text = text
+    this.className = className
+    this.init()
+}
+inheritPrototype(SpanItem, FormComposite)
+SpanItem.prototype = {
+    init: function() {
+        this.element = document.createElement("label")
+        this.element.innerHTML = this.text
+        this.element.className = this.className
+    },
+    add: function() {},
+    getElement: function() {
+        return this.element
+    }
+}
+
+var form = new FormContainer("form", document.body)
+form.add(
+        new FormItem("form-item").add(
+            new LabelItem("username", "username")
+        ).add(
+            new InputItem("input")
+        ).add(
+            new SpanItem("please input useramae", "span")
+        )
+    ).add(
+        new FormItem("form-item").add(
+            new LabelItem("pwd", "pwd")
+        ).add(
+            new InputItem("input")
+        ).add(
+            new SpanItem("please input pwd", "span")
+        )
+    ).show()
+
+
