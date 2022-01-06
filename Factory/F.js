@@ -1,10 +1,6 @@
-function Factory(type, options) {
-    // 将创建工作延迟到子类中
-    if(this instanceof Factory) {
-        return new this[type](options)
-    } else {
-        return new Factory(type, options)
-    }
+function Factory(type) {
+    // 将创建工作延迟到子类中，这里直接返回对应的工厂，这里关联关系用原型处理，也可以用继承
+    return this[type]
 }
 Factory.prototype = {
     FootBall: function(options) {
@@ -31,11 +27,14 @@ Factory.prototype = {
         } 
         return o
     }
-    // 扩展子类
+    // 扩展工厂
 }
-var football = Factory("FootBall", {
+
+var FootballFactory = new Factory("FootBall")
+var football = FootballFactory({
     price: 10,
-    quantity: 10,
+    quantity: 20,
     color: "red"
 })
 football.play()
+// 用脚踢
