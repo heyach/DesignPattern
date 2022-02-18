@@ -15,7 +15,7 @@ function Sup(name) {
     this.colors = "red"
 }
 Sup.prototype.getName = function() {
-    console.lgog(this.name)
+    console.log(this.name)
 }
 function Sub(name, time) {
     Sup.call(this, name)
